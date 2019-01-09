@@ -1,4 +1,5 @@
-const products = [{
+const products = [
+  {
     "_id": 1,
     "name": "Body Luxuries Sweet Lavender Hand Sanitizer",
     "description": "Makes your hands clean",
