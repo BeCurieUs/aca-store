@@ -3,7 +3,7 @@
 const searchItems = () => {
   console.log(products)
 }
-const displayArray
+const displayArray = ""
 
 
 document.getElementById("itemlist").innerHTML = products.map((item,index)=>{
