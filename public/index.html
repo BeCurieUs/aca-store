@@ -9,12 +9,16 @@
     <link rel="stylesheet" type="text/css" href="./styles/style.css" />
 
 </head>
-<body>
-    <form id= "search-form" onsubmit="event.preventDefault(); searchItems();">
-        Search For Item <input id="serch-field" type="text" value="0">
-        <input type="submit" value="Submit">
-    </form> 
-    <div id="main">
+<body onclick="userIsActive()">
+    <div id="category-serch">
+        <select id="select-category" onchange="changeCatagory(this.value)">
+        </select>
+        <form id= "search-form" onsubmit="event.preventDefault(); searchItems();">
+            <input id="serch-field" type="text" placeholder="Search For Item">
+            <input type="submit" value="Submit">
+        </form> 
+    </div>
+    <div>
         <ul id="itemlist">
         </ul>
     </div>
