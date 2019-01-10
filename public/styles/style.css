@@ -1,0 +1,24 @@
+#itemlist {
+  display: flex ;
+  flex-direction: row;
+  overflow-x: auto;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.product-item {
+  width:fit-content;
+  height: fit-content;
+  padding: 1em;
+}
+
+.product-title {
+  text-align: center;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: row;
+}

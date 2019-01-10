@@ -5,12 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>My Store</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="./styles/reset.css" />
     <link rel="stylesheet" type="text/css" href="./styles/style.css" />
+
 </head>
 <body>
-    <form onsubmit="searchItems()">
-        Search For Item <input type="text">
-        <input type="submit">
+    <form id= "search-form" onsubmit="event.preventDefault(); searchItems();">
+        Search For Item <input id="serch-field" type="text" value="0">
+        <input type="submit" value="Submit">
     </form> 
     <div id="main">
         <ul id="itemlist">
