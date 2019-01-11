@@ -27,3 +27,13 @@ ul {
   display: flex;
   flex-direction: row;
 }
+
+#main-product-details {
+  display: flex;
+  flex-direction: row;
+}
+
+#detail-listing {
+  display: flex;
+  flex-direction: column;
+}

@@ -7,9 +7,33 @@ const checkActivity = () => {
   if(userActive) {
     userActive = false;
   }else{
-    alert("Are you still there?")
+    console.log("Are you still there?")
     userActive = true;
   }
+}
+
+const displayProduct = (itemID) => {
+
+  const item = products.find(items => {
+    return items._id == itemID;
+  })
+  document.getElementById("itemlist").innerHTML = ""
+
+  
+
+  document.getElementById("product-description").innerHTML = `
+  <div class="main-product-details">
+    <img src=${item.imgUrl} alt=${item.description} />
+    <div id="detail-listing"> 
+      <p class="product-title">${item.name}</p>
+      <p class="product-rating">Rating: ${item.rating}</p>
+      <p class="product-reviews">Reviews: ${item.reviews.length}</p>
+      <p class="product-price">Price: ${item.price}</p>
+    </div>
+  </div>
+  `
+
+  // showReviews();
 }
 
 const imageCard = (item, descriptionSelector) => {
@@ -21,7 +45,7 @@ const imageCard = (item, descriptionSelector) => {
         <p class="product-rating">Rating: ${item.rating}</p>
         <p class="product-reviews">Reviews: ${item.reviews.length}</p>
         <p class="product-price">Price: ${item.price}</p>
-        <p class="product-description">description drop down placeholder</p>
+        <p onclick="displayProduct('${item._id}')" class="product-description">See description</p>
 
       </li>`
   }
@@ -36,7 +60,7 @@ const imageCard = (item, descriptionSelector) => {
   </li>`
 }
 const searchItems = () => {
-
+  document.getElementById("product-description").innerHTML = ""
   let categoryProducts = [];
   const category = document.getElementById("select-category").value
   const formValue = document.getElementById("search-form").elements[0].value
@@ -52,7 +76,7 @@ const searchItems = () => {
   } else{
     categoryProducts = products;
   }
-  console.log(categoryProducts)
+  // console.log(categoryProducts)
 
 
   const tempDisplayArray = categoryProducts.filter( (item,index) => {
@@ -68,6 +92,7 @@ const searchItems = () => {
 }
 
 const displayDefault = (category) => {
+  document.getElementById("product-description").innerHTML = ""
   let categoryProducts = [];
   if(category && category !== "--Choose--"){
     categoryProducts = products.reduce( (accumulator,item) => {
