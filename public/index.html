@@ -11,12 +11,14 @@
 </head>
 <body onclick="userIsActive()">
     <div id="category-serch">
+        <button onclick="resetEverything()">Home</button>
         <select id="select-category" onchange="changeCatagory(this.value)">
         </select>
         <form id= "search-form" onsubmit="event.preventDefault(); searchItems();">
             <input id="serch-field" type="text" placeholder="Search For Item">
             <input type="submit" value="Submit">
         </form> 
+        <button onclick="displayCart()">Show Cart</button>
     </div>
     <div>
         <div id="product-description">
@@ -24,6 +26,9 @@
         </div>
         <ul id="itemlist">
         </ul>
+        <ul id="cart">
+
+        </div>
     </div>
     <script src="products.js"></script>    
     <script src="index.js"></script>   

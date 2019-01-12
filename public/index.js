@@ -14,53 +14,98 @@ const checkActivity = () => {
 
 const displayProduct = (itemID) => {
 
-  const item = products.find(items => {
-    return items._id == itemID;
-  })
+  const item = getItemById(itemID)
   document.getElementById("itemlist").innerHTML = ""
+  document.getElementById("cart").innerHTML = ""
 
   
 
   document.getElementById("product-description").innerHTML = `
   <div class="main-product-details">
     <img src=${item.imgUrl} alt=${item.description} />
-    <div id="detail-listing"> 
-      <p class="product-title">${item.name}</p>
-      <p class="product-rating">Rating: ${item.rating}</p>
-      <p class="product-reviews">Reviews: ${item.reviews.length}</p>
-      <p class="product-price">Price: ${item.price}</p>
+    <div class="detail-listing"> 
+      <p class="description-title">${item.name}</p>
+      <p class="description-rating">Rating: ${item.rating}</p>
+      <p class="description-reviews">Reviews: ${item.reviews.length}</p>
+      <p class="description-price">Price: ${item.price}</p>
+      <p class="description-price">Description: ${item.description}</p>
     </div>
+    <button class="description-addtocart" onclick="addToCart(${itemID})">Add To Cart</button>
+
   </div>
   `
-
   // showReviews();
 }
 
-const imageCard = (item, descriptionSelector) => {
+const getItemById = (id) => {
+  return products.find(items => {
+    return items._id == id;
+  })
+}
+
+
+const addToCart = (id) => {
+  const item = JSON.parse(JSON.stringify(getItemById(id)));
+  // deep copy of item so we don't mess with the orignial product array
+  carduniquieid ++;
+  // make unique id for cart item
+  item.cartId = carduniquieid;
+  // assign unique id to cart item. This allows for deletion of speicific cart items rather
+  // than items of the first item of the matched product ID
+  cart.push(item);
+
+}
+
+const displayCart = () => {
+  document.getElementById("product-description").innerHTML = ""
+  document.getElementById("itemlist").innerHTML = ""
+  document.getElementById("cart").innerHTML = cart.map( (item,index) => {
+    return `
+    <div class="cart-row-container">
+      ${imageCard(item,false,"div")} 
+      <button class="cart-delete-item" onclick="cartDeleteItem(${item.cartId})">X</button>
+    </div>
+    `
+  }).join("")
+
+}
+
+const cartDeleteItem = (passedCartId) => {
+
+  const deleteIndex = cart.findIndex( (item,index) => {
+    return item.cartId === passedCartId
+  })
+
+  cart.splice(deleteIndex,1)
+
+  displayCart();
+}
+
+const imageCard = (item, descriptionSelector,tagType) => {
   if(descriptionSelector){
     return `
-      <li class="product-item" >
+      <${tagType} class="product-item" >
         <img src=${item.imgUrl} alt=${item.description} />
         <p class="product-title">${item.name}</p>
         <p class="product-rating">Rating: ${item.rating}</p>
         <p class="product-reviews">Reviews: ${item.reviews.length}</p>
         <p class="product-price">Price: ${item.price}</p>
-        <p onclick="displayProduct('${item._id}')" class="product-description">See description</p>
-
-      </li>`
+        <button onclick="displayProduct('${item._id}')" class="product-description">See description</button>
+      </${tagType}>`
   }
   //implicit else
   return `
-  <li class="product-item" >
+  <${tagType} class="product-item" >
     <img src=${item.imgUrl} alt=${item.description} />
     <p class="product-title">${item.name}</p>
     <p class="product-rating">Rating: ${item.rating}</p>
     <p class="product-reviews">Reviews: ${item.reviews.length}</p>
     <p class="product-price">Price: ${item.price}</p>
-  </li>`
+  </${tagType}>`
 }
 const searchItems = () => {
   document.getElementById("product-description").innerHTML = ""
+  document.getElementById("cart").innerHTML = ""
   let categoryProducts = [];
   const category = document.getElementById("select-category").value
   const formValue = document.getElementById("search-form").elements[0].value
@@ -91,8 +136,15 @@ const searchItems = () => {
 
 }
 
+const resetEverything = () => {
+  displayDefault();
+  document.getElementById("select-category").value = "--Choose--"
+
+}
+
 const displayDefault = (category) => {
   document.getElementById("product-description").innerHTML = ""
+  document.getElementById("cart").innerHTML = ""
   let categoryProducts = [];
   if(category && category !== "--Choose--"){
     categoryProducts = products.reduce( (accumulator,item) => {
@@ -134,7 +186,8 @@ const changeCatagory = (category) => {
 
 
 let userActive = true;
-let filterTracker = [];
+let cart = [];
+let carduniquieid = 0;
 
 const activityTimer = setInterval(checkActivity,60000)
 
