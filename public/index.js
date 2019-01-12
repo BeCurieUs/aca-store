@@ -18,7 +18,23 @@ const displayProduct = (itemID) => {
   document.getElementById("itemlist").innerHTML = ""
   document.getElementById("cart").innerHTML = ""
 
+  // I decided to have different elements we inject the code at
+  // this means I need to manage the state of them by blanking 
+  // them out whenever we enter a differnet display element
+
+  // This is as opposed to having to change the class for styling each time
+  // we changed display modes. In retrospect, it hits the dom more this way
+  // as I would only need to change the class for display reasons once
+  // per display mode change rather than at least twice to blank out
+  // the other display mode divs.  When I had just 2 display modes, 
+  // this method was similarlly dom painful.
+
   
+  // this display mode is for product descriptions, which puts the image
+  // on the left and the description info on the right and the
+  // reviews on the bottom, slighty different than the product list
+  // mode and shopping cart display mode
+
 
   document.getElementById("product-description").innerHTML = `
   <div class="main-product-details">
@@ -30,6 +46,9 @@ const displayProduct = (itemID) => {
       <p class="description-price">Price: ${item.price}</p>
       <p class="description-price">Description: ${item.description}</p>
     </div>
+    <select id="product-qty" class="product-cart-qty">
+      ${descriptionNumberCart(itemID)}
+    </select>
     <button class="description-addtocart" onclick="addToCart(${itemID})">Add To Cart</button>
 
   </div>
@@ -37,22 +56,45 @@ const displayProduct = (itemID) => {
   // showReviews();
 }
 
+const descriptionNumberCart = (itemID) => {
+  return `
+  <option>1</option>
+  <option>2</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+  <option>6</option>
+  <option>7</option>
+  <option>8</option>
+  <option>9</option>
+  <option>10</option>
+  `
+}
+
 const getItemById = (id) => {
   return products.find(items => {
     return items._id == id;
   })
+
+  // utility class that returns an item object from the product array
+  // given a product ID, used because you can't really pass around
+  // objects in HTML function calls well
 }
 
 
 const addToCart = (id) => {
   const item = JSON.parse(JSON.stringify(getItemById(id)));
   // deep copy of item so we don't mess with the orignial product array
+  // when we add a uniquie cartID
   carduniquieid ++;
   // make unique id for cart item
   item.cartId = carduniquieid;
   // assign unique id to cart item. This allows for deletion of speicific cart items rather
   // than items of the first item of the matched product ID
+  item.qty = document.getElementById("product-qty").value
   cart.push(item);
+
+  sessionStorage.setItem('cart', JSON.stringify(cart));
 
 }
 
@@ -67,6 +109,7 @@ const displayCart = () => {
     </div>
     `
   }).join("")
+
 
 }
 
@@ -101,6 +144,7 @@ const imageCard = (item, descriptionSelector,tagType) => {
     <p class="product-rating">Rating: ${item.rating}</p>
     <p class="product-reviews">Reviews: ${item.reviews.length}</p>
     <p class="product-price">Price: ${item.price}</p>
+    <p class="cart-qty">Qty: ${item.qty}</p>
   </${tagType}>`
 }
 const searchItems = () => {
@@ -191,6 +235,9 @@ let carduniquieid = 0;
 
 const activityTimer = setInterval(checkActivity,60000)
 
+if(sessionStorage.getItem("cart")){
+  cart = JSON.parse(sessionStorage.getItem("cart"))
+}
 
 displayDefault();
 populateCategories();

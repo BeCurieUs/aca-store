@@ -25,6 +25,11 @@ ul {
   flex-direction: row;
 }
 
+.product-cart-qty {
+  align-self: center;
+  margin-right: 1em;
+}
+
 #category-serch,.cart-row-container {
   display: flex;
   flex-direction: row;
