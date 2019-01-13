@@ -46,14 +46,34 @@ const displayProduct = (itemID) => {
       <p class="description-price">Price: ${item.price}</p>
       <p class="description-price">Description: ${item.description}</p>
     </div>
-    <select id="product-qty" class="product-cart-qty">
-      ${descriptionNumberCart(itemID)}
-    </select>
+    <div class="product-cart-qty">
+      <p>Qty:</p>
+      <select id="product-qty" >
+        ${descriptionNumberCart(itemID)}
+      </select>
+    </div>
     <button class="description-addtocart" onclick="addToCart(${itemID})">Add To Cart</button>
 
   </div>
+
+  ${showReviews(item)}
   `
-  // showReviews();
+}
+
+const showReviews = (item) => {
+
+  return `
+  <div class="product-reviews">
+    ${item.reviews.map( (review,index) => {
+      return `
+        <div class="product-reviews-group">
+          <p>Description: ${review.description}</p>
+          <p>Rating: ${review.rating}</p>
+        </div>
+      `
+    }).join('')}
+  </div>
+  `
 }
 
 const descriptionNumberCart = (itemID) => {
@@ -101,16 +121,20 @@ const addToCart = (id) => {
 const displayCart = () => {
   document.getElementById("product-description").innerHTML = ""
   document.getElementById("itemlist").innerHTML = ""
-  document.getElementById("cart").innerHTML = cart.map( (item,index) => {
+  document.getElementById("cart").innerHTML = `<button class="cart-checkout" onclick="checkout()">Check out</button>`+
+  cart.map( (item,index) => {
     return `
     <div class="cart-row-container">
       ${imageCard(item,false,"div")} 
       <button class="cart-delete-item" onclick="cartDeleteItem(${item.cartId})">X</button>
     </div>
     `
-  }).join("")
+  }).join("")+
+  `<button class="cart-checkout" onclick="checkout()">Check out</button>`
+}
 
-
+const checkout = () => {
+  document.getElementById("cart").innerHTML = "";
 }
 
 const cartDeleteItem = (passedCartId) => {

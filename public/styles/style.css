@@ -66,3 +66,16 @@ ul {
   padding-right: 1em;
   margin-top: 1em;
 }
+
+.cart-checkout {
+  width: fit-content;
+  margin-top: 1em;
+}
+
+.product-reviews {
+  margin-left: 2em;
+}
+
+.product-reviews-group {
+  margin-top: 1em;
+}
