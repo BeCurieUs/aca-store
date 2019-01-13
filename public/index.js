@@ -134,7 +134,18 @@ const displayCart = () => {
 }
 
 const checkout = () => {
-  document.getElementById("cart").innerHTML = "";
+  document.getElementById("cart").innerHTML = `
+    <form id= "Checkout-form" onsubmit="event.preventDefault(); buyItems();">
+      <input id="checkout-firstname" type="text" placeholder="First Name">
+      <input id="checkout-lastname" type="text" placeholder="Last Name">
+      <input id="checkout-email" type="text" placeholder="Email Address">
+      <input id="checkout-submit" type="submit" value="Submit Order">
+    </form> 
+  `;
+}
+
+const buyItems = () => {
+  console.log("dem items bois")
 }
 
 const cartDeleteItem = (passedCartId) => {

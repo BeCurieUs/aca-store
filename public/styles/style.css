@@ -79,3 +79,18 @@ ul {
 .product-reviews-group {
   margin-top: 1em;
 }
+
+#Checkout-form {
+  margin-left: 1em;
+  display: flex;
+  flex-direction: column;
+}
+
+#Checkout-form * {
+  width: 50%;
+  margin: 1em;
+}
+
+#checkout-submit {
+  width: fit-content;
+}
