@@ -198,12 +198,12 @@ const imageCard = (item, descriptionSelector,tagType) => {
     return `
       <${tagType} class="padding-small" >
         <img src=${item.imgUrl} alt=${item.description} />
-        <div class="product-description-container"> 
-          <p class="product-title">${item.name}</p>
-          <p class="product-rating">Rating: ${item.rating}</p>
-          <p class="product-reviews-card">Reviews: ${item.reviews.length}</p>
-          <p class="product-price">Price: ${item.price}</p>
-          <button onclick="displayProduct('${item._id}')" class="product-description">See description</button>
+        <div> 
+          <p>${item.name}</p>
+          <p>Rating: ${item.rating}</p>
+          <p>Reviews: ${item.reviews.length}</p>
+          <p>Price: ${item.price}</p>
+          <button onclick="displayProduct('${item._id}')" >See description</button>
         </div>
       </${tagType}>`
   }
@@ -211,12 +211,12 @@ const imageCard = (item, descriptionSelector,tagType) => {
   return `
   <${tagType} class="padding-small" >
     <img src=${item.imgUrl} alt=${item.description} />
-    <div class="product-description-container"> 
-      <p class="product-title">${item.name}</p>
-      <p class="product-rating">Rating: ${item.rating}</p>
-      <p class="product-reviews-card">Reviews: ${item.reviews.length}</p>
-      <p class="product-price">Price: ${item.price}</p>
-      <p class="cart-qty">Qty: ${item.qty}</p>
+    <div> 
+      <p>${item.name}</p>
+      <p>Rating: ${item.rating}</p>
+      <p>Reviews: ${item.reviews.length}</p>
+      <p>Price: ${item.price}</p>
+      <p>Qty: ${item.qty}</p>
     </div>
   </${tagType}>`
 }
