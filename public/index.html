@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="./styles/style.css" />
 
 </head>
-<body onclick="userIsActive()">
-    <div id="category-serch">
+<body class="padding-small" onclick="userIsActive()">
+    <div id="category-serch" class="fit-content flex-right ">
         <button onclick="resetEverything()">Home</button>
         <select id="select-category" onchange="changeCatagory(this.value)">
         </select>
@@ -21,14 +21,8 @@
         <button onclick="displayCart()">Show Cart</button>
     </div>
     <div>
-        <div id="product-description">
-
-        </div>
-        <ul id="itemlist">
-        </ul>
-        <ul id="cart">
-
-        </div>
+        <section id="main-list" class="flex-down ">
+        </section>
     </div>
     <script src="products.js"></script>    
     <script src="index.js"></script>   

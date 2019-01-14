@@ -25,44 +25,25 @@ const checkActivity = () => {
 const displayProduct = (itemID) => {
 
   const item = getItemById(itemID)
-  document.getElementById("itemlist").innerHTML = ""
-  document.getElementById("cart").innerHTML = ""
-
-  // I decided to have different elements we inject the code at
-  // this means I need to manage the state of them by blanking 
-  // them out whenever we enter a differnet display element
-
-  // This is as opposed to having to change the class for styling each time
-  // we changed display modes. In retrospect, it hits the dom more this way
-  // as I would only need to change the class for display reasons once
-  // per display mode change rather than at least twice to blank out
-  // the other display mode divs.  When I had just 2 display modes, 
-  // this method was similarlly dom painful.
-
-  
-  // this display mode is for product descriptions, which puts the image
-  // on the left and the description info on the right and the
-  // reviews on the bottom, slighty different than the product list
-  // mode and shopping cart display mode
 
 
-  document.getElementById("product-description").innerHTML = `
-  <div class="main-product-details">
-    <img src=${item.imgUrl} alt=${item.description} />
-    <div class="detail-listing"> 
-      <p class="description-title">${item.name}</p>
-      <p class="description-rating">Rating: ${item.rating}</p>
-      <p class="description-reviews">Reviews: ${item.reviews.length}</p>
-      <p class="description-price">Price: ${item.price}</p>
-      <p class="description-price">Description: ${item.description}</p>
+  document.getElementById("main-list").innerHTML = `
+  <div class="flex-right padding-small">
+    <img class="fit-content" src=${item.imgUrl} alt=${item.description} />
+    <div class="margin-small-left"> 
+      <p>${item.name}</p>
+      <p>Rating: ${item.rating}</p>
+      <p>Reviews: ${item.reviews.length}</p>
+      <p>Price: ${item.price}</p>
+      <p>Description: ${item.description}</p>
     </div>
-    <div class="product-cart-qty">
+    <div class="margin-small-left flex-align-center ">
       <p>Qty:</p>
       <select id="product-qty" >
         ${descriptionNumberCart(itemID)}
       </select>
     </div>
-    <button class="description-addtocart" onclick="addToCart(${itemID})">Add To Cart</button>
+    <button class="margin-small-left" onclick="addToCart(${itemID})">Add To Cart</button>
 
   </div>
 
@@ -75,16 +56,17 @@ const showReviews = (item) => {
   // appropriate, everything being a P tag is about as suboptimal
   // SEO as achivable. 
   return `
-  <div class="product-reviews">
+  <section id="reviews">
+    <h1 class="h2-size"> Reviews: </h1>
     ${item.reviews.map( (review,index) => {
       return `
-        <div class="product-reviews-group">
+        <article class="padding-small">
           <p>Description: ${review.description}</p>
           <p>Rating: ${review.rating}</p>
-        </div>
+        </article>
       `
     }).join('')}
-  </div>
+  </section>
   `
 }
 
@@ -139,22 +121,21 @@ const addToCart = (id) => {
 }
 
 const displayCart = () => {
-  document.getElementById("product-description").innerHTML = ""
-  document.getElementById("itemlist").innerHTML = ""
-  // have to delete other elements cause you can branch to 2 different
-  // view modes from cart...I shouldn't have modeled my views like this
+ 
 
-  document.getElementById("cart").innerHTML = `<button class="cart-checkout" onclick="checkout()">Check out</button>`+
-  cart.map( (item,index) => {
+  document.getElementById("main-list").innerHTML = 
+  (cart.length!=0 ? '<button class="fit-content margin-small-top" onclick="checkout()">Check out</button>' : "")+
+  `<h1 class="h2-size margin-small">Your Shopping Cart:<h1>`+
+  (cart.length!=0 ? cart.map( (item,index) => {
     //creates the individual cart boxes
     return `
-    <div class="cart-row-container">
-      ${imageCard(item,false,"div")} 
-      <button class="cart-delete-item" onclick="cartDeleteItem(${item.cartId})">X</button>
+    <div class="flex-right">
+      ${imageCard(item,false,"article")} 
+      <button class="fit-content" onclick="cartDeleteItem(${item.cartId})">X</button>
     </div>
     `
-  }).join("")+
-  `<button class="cart-checkout" onclick="checkout()">Check out</button>`
+  }).join("") : "<p>Cart is empty</p>")+
+  (cart.length!=0 ? '<button class="fit-content margin-small-top" onclick="checkout()">Check out</button>' : "")
 }
 
 const checkout = () => {
@@ -164,12 +145,12 @@ const checkout = () => {
   // so no need to reset any of the forms and we reuse the 
   // shopping cart view mode so we don't have to reset a 4th item in the
   // other code
-  document.getElementById("cart").innerHTML = `
-    <form class= "Checkout-form" onsubmit="event.preventDefault(); buyItems();">
-      <input id="checkout-firstname" type="text" placeholder="First Name">
-      <input id="checkout-lastname" type="text" placeholder="Last Name">
-      <input id="checkout-email" type="text" placeholder="Email Address">
-      <ul class="checkout-orderitems">
+  document.getElementById("main-list").innerHTML = `
+    <form class= "flex-down margin-small half-vw" onsubmit="event.preventDefault(); buyItems();">
+      <input class="margin-small" id="checkout-firstname" type="text" placeholder="First Name">
+      <input class="margin-small" id="checkout-lastname" type="text" placeholder="Last Name">
+      <input class="margin-small"  id="checkout-email" type="text" placeholder="Email Address">
+      <ul class="margin-small">
         ${cart.map( (item,index) => {
           priceTotal+=(item.qty*(Number(item.price.slice(1,item.price.length))));
           return `
@@ -182,7 +163,7 @@ const checkout = () => {
       <p class"checkout-price-total">
         Total: $${priceTotal.toFixed(2)}
       </p>
-      <input id="checkout-submit" type="submit" value="Submit Order">
+      <input class="fit-content margin-small-top" id="checkout-submit" type="submit" value="Submit Order">
     </form> 
     
   `;
@@ -199,6 +180,9 @@ const cartDeleteItem = (passedCartId) => {
 
   cart.splice(deleteIndex,1)
 
+  sessionStorage.setItem('cart', JSON.stringify(cart));
+
+
   displayCart();
 }
 
@@ -206,32 +190,38 @@ const imageCard = (item, descriptionSelector,tagType) => {
   // use to create images and display text, but I need to rethink this
   // implimentation, it's clunky. Likely need just a flat version of this
   // and smarter CSS implimentation
+  if(!tagType){
+    tagType="li"
+  }
+
   if(descriptionSelector){
     return `
-      <${tagType} class="product-item" >
+      <${tagType} class="padding-small" >
         <img src=${item.imgUrl} alt=${item.description} />
-        <p class="product-title">${item.name}</p>
-        <p class="product-rating">Rating: ${item.rating}</p>
-        <p class="product-reviews-card">Reviews: ${item.reviews.length}</p>
-        <p class="product-price">Price: ${item.price}</p>
-        <button onclick="displayProduct('${item._id}')" class="product-description">See description</button>
+        <div class="product-description-container"> 
+          <p class="product-title">${item.name}</p>
+          <p class="product-rating">Rating: ${item.rating}</p>
+          <p class="product-reviews-card">Reviews: ${item.reviews.length}</p>
+          <p class="product-price">Price: ${item.price}</p>
+          <button onclick="displayProduct('${item._id}')" class="product-description">See description</button>
+        </div>
       </${tagType}>`
   }
   //implicit else
   return `
-  <${tagType} class="product-item" >
+  <${tagType} class="padding-small" >
     <img src=${item.imgUrl} alt=${item.description} />
-    <p class="product-title">${item.name}</p>
-    <p class="product-rating">Rating: ${item.rating}</p>
-    <p class="product-reviews-card">Reviews: ${item.reviews.length}</p>
-    <p class="product-price">Price: ${item.price}</p>
-    <p class="cart-qty">Qty: ${item.qty}</p>
+    <div class="product-description-container"> 
+      <p class="product-title">${item.name}</p>
+      <p class="product-rating">Rating: ${item.rating}</p>
+      <p class="product-reviews-card">Reviews: ${item.reviews.length}</p>
+      <p class="product-price">Price: ${item.price}</p>
+      <p class="cart-qty">Qty: ${item.qty}</p>
+    </div>
   </${tagType}>`
 }
 const searchItems = () => {
   
-  document.getElementById("product-description").innerHTML = ""
-  document.getElementById("cart").innerHTML = ""
   let categoryProducts = [];
   const category = document.getElementById("select-category").value
   // grab the catagory field
@@ -256,13 +246,15 @@ const searchItems = () => {
   const tempDisplayArray = categoryProducts.filter( (item,index) => {
     return item.name.toLocaleLowerCase().includes(formValue);
   }).map((fliteredItem,filteredIndex) => {
-    return imageCard(fliteredItem,true)
+    return imageCard(fliteredItem,true,"article")
   })
 
   
 
-  document.getElementById("itemlist").innerHTML = tempDisplayArray.join("")
-
+  document.getElementById("main-list").innerHTML = 
+  "<div class='flex-right overflow'>"+
+  tempDisplayArray.join("")+
+  "</div>"
 }
 
 const resetEverything = () => {
@@ -272,8 +264,6 @@ const resetEverything = () => {
 }
 
 const displayDefault = (category) => {
-  document.getElementById("product-description").innerHTML = ""
-  document.getElementById("cart").innerHTML = ""
   let categoryProducts = [];
   if(category && category !== "--Choose--"){
     categoryProducts = products.reduce( (accumulator,item) => {
@@ -287,9 +277,11 @@ const displayDefault = (category) => {
     categoryProducts = products;
   }
 
-  document.getElementById("itemlist").innerHTML = categoryProducts.map((item,index)=>{
-    return(imageCard(item,true))
-  }).join('');
+  document.getElementById("main-list").innerHTML = "<div id='product-row' class='flex-right overflow'>" +
+  categoryProducts.map((item,index)=>{
+    return(imageCard(item,true,"article"))
+  }).join('') +
+  "</div>"
 }
 
 const populateCategories = () => {
