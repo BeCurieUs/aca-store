@@ -2,13 +2,23 @@
 const userIsActive = () => {
   userActive = true;
 }
+// triggers anytime anything in the main site div is clicked to let us
+// know the user is active.
 
 const checkActivity = () => {
+
+  // function is triggered every min from our timer, sets activity manually to false
+  // unless the user creates an on click action on the main, the next
+  // min will trigger false and promt for use action...in the most
+  // horrible and obnoxious way!
   if(userActive) {
     userActive = false;
   }else{
     console.log("Are you still there?")
     userActive = true;
+    // changed from alert to console for now cause alerts are the devil
+    // if I forget to change back just know I know it was supposed to be
+    // alert
   }
 }
 
@@ -61,7 +71,9 @@ const displayProduct = (itemID) => {
 }
 
 const showReviews = (item) => {
-
+  // should likely go in and clear up the tags and make H1s and H2s where
+  // appropriate, everything being a P tag is about as suboptimal
+  // SEO as achivable. 
   return `
   <div class="product-reviews">
     ${item.reviews.map( (review,index) => {
@@ -77,6 +89,9 @@ const showReviews = (item) => {
 }
 
 const descriptionNumberCart = (itemID) => {
+
+  // we might want cart quantity options to be dynamic base on avaliablily
+  // we would throw that in here for the return
   return `
   <option>1</option>
   <option>2</option>
@@ -90,6 +105,8 @@ const descriptionNumberCart = (itemID) => {
   <option>10</option>
   `
 }
+
+
 
 const getItemById = (id) => {
   return products.find(items => {
@@ -116,13 +133,20 @@ const addToCart = (id) => {
 
   sessionStorage.setItem('cart', JSON.stringify(cart));
 
+  // on hindsite, uniue property ID isn't needed if we gather similar items
+  // for the user, I will consider doing this in a refactor. This would save some
+  // memory. 
 }
 
 const displayCart = () => {
   document.getElementById("product-description").innerHTML = ""
   document.getElementById("itemlist").innerHTML = ""
+  // have to delete other elements cause you can branch to 2 different
+  // view modes from cart...I shouldn't have modeled my views like this
+
   document.getElementById("cart").innerHTML = `<button class="cart-checkout" onclick="checkout()">Check out</button>`+
   cart.map( (item,index) => {
+    //creates the individual cart boxes
     return `
     <div class="cart-row-container">
       ${imageCard(item,false,"div")} 
@@ -134,13 +158,33 @@ const displayCart = () => {
 }
 
 const checkout = () => {
+  let priceTotal = 0;
+
+  // create the checkout form. You can only get here from the shopping cart
+  // so no need to reset any of the forms and we reuse the 
+  // shopping cart view mode so we don't have to reset a 4th item in the
+  // other code
   document.getElementById("cart").innerHTML = `
-    <form id= "Checkout-form" onsubmit="event.preventDefault(); buyItems();">
+    <form class= "Checkout-form" onsubmit="event.preventDefault(); buyItems();">
       <input id="checkout-firstname" type="text" placeholder="First Name">
       <input id="checkout-lastname" type="text" placeholder="Last Name">
       <input id="checkout-email" type="text" placeholder="Email Address">
+      <ul class="checkout-orderitems">
+        ${cart.map( (item,index) => {
+          priceTotal+=(item.qty*(Number(item.price.slice(1,item.price.length))));
+          return `
+          <li class="checkout-item">
+            ${item.name + ": " + item.qty + "x" + item.price + "=" + "$"+(item.qty*(Number(item.price.slice(1,item.price.length)))).toFixed(2)}
+          </li> 
+          `
+        }).join('')}
+      </ul>
+      <p class"checkout-price-total">
+        Total: $${priceTotal.toFixed(2)}
+      </p>
       <input id="checkout-submit" type="submit" value="Submit Order">
     </form> 
+    
   `;
 }
 
@@ -149,7 +193,6 @@ const buyItems = () => {
 }
 
 const cartDeleteItem = (passedCartId) => {
-
   const deleteIndex = cart.findIndex( (item,index) => {
     return item.cartId === passedCartId
   })
@@ -160,13 +203,16 @@ const cartDeleteItem = (passedCartId) => {
 }
 
 const imageCard = (item, descriptionSelector,tagType) => {
+  // use to create images and display text, but I need to rethink this
+  // implimentation, it's clunky. Likely need just a flat version of this
+  // and smarter CSS implimentation
   if(descriptionSelector){
     return `
       <${tagType} class="product-item" >
         <img src=${item.imgUrl} alt=${item.description} />
         <p class="product-title">${item.name}</p>
         <p class="product-rating">Rating: ${item.rating}</p>
-        <p class="product-reviews">Reviews: ${item.reviews.length}</p>
+        <p class="product-reviews-card">Reviews: ${item.reviews.length}</p>
         <p class="product-price">Price: ${item.price}</p>
         <button onclick="displayProduct('${item._id}')" class="product-description">See description</button>
       </${tagType}>`
@@ -177,18 +223,20 @@ const imageCard = (item, descriptionSelector,tagType) => {
     <img src=${item.imgUrl} alt=${item.description} />
     <p class="product-title">${item.name}</p>
     <p class="product-rating">Rating: ${item.rating}</p>
-    <p class="product-reviews">Reviews: ${item.reviews.length}</p>
+    <p class="product-reviews-card">Reviews: ${item.reviews.length}</p>
     <p class="product-price">Price: ${item.price}</p>
     <p class="cart-qty">Qty: ${item.qty}</p>
   </${tagType}>`
 }
 const searchItems = () => {
+  
   document.getElementById("product-description").innerHTML = ""
   document.getElementById("cart").innerHTML = ""
   let categoryProducts = [];
   const category = document.getElementById("select-category").value
+  // grab the catagory field
   const formValue = document.getElementById("search-form").elements[0].value
-
+  // grab the search field
   if(category && category !== "--Choose--"){
     categoryProducts = products.reduce( (accumulator,item) => {
       if(item.category===category){
@@ -197,12 +245,14 @@ const searchItems = () => {
       }
       return accumulator;
     },[])
+    // return a list of only products that meet the select catagory search
   } else{
     categoryProducts = products;
+    // but if its the default just return the full list
   }
-  // console.log(categoryProducts)
 
 
+  // then apply the search filter and we will display the mapped results
   const tempDisplayArray = categoryProducts.filter( (item,index) => {
     return item.name.toLocaleLowerCase().includes(formValue);
   }).map((fliteredItem,filteredIndex) => {
@@ -244,6 +294,8 @@ const displayDefault = (category) => {
 
 const populateCategories = () => {
 
+  // categories not hardcoded, dynamically generated. 
+
   const tempDisplay = products.reduce((accumulator,item) => {
     if(!accumulator.includes(item.category)){
       accumulator.push(item.category)
@@ -259,6 +311,10 @@ const populateCategories = () => {
 }
 
 const changeCatagory = (category) => {
+
+  // empty out the search field to let the user know that their
+  // old search isn't active in the new category field
+
   document.getElementById("search-form").elements[0].value = ""
   displayDefault(category);
 }

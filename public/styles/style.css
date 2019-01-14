@@ -80,17 +80,28 @@ ul {
   margin-top: 1em;
 }
 
-#Checkout-form {
+.Checkout-form {
   margin-left: 1em;
   display: flex;
   flex-direction: column;
 }
 
-#Checkout-form * {
+.Checkout-form * {
   width: 50%;
   margin: 1em;
 }
 
 #checkout-submit {
   width: fit-content;
+}
+
+.checkout-orderitems {
+  margin-left: 1em;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+.checkout-item {
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
