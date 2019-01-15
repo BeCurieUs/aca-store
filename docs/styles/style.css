@@ -1,0 +1,56 @@
+/* refactored css */
+
+
+.flex-right {
+  display: flex ;
+  flex-direction: row;
+}
+
+
+.flex-down {
+  display: flex;
+  flex-direction: column;
+}
+
+.fit-content {
+  width: fit-content;
+  height: fit-content;
+}
+
+.overflow {
+  overflow-x: auto;
+}
+
+.margin-small {
+  margin: 1em;
+}
+
+.margin-small-top {
+  margin-top: 1em;
+}
+
+.margin-small-left{
+  margin-left: 1em;
+}
+
+.padding-small{
+  padding: 1em;
+}
+
+.padding-medium{
+  padding: 2em;
+}
+
+.flex-align-center {
+  align-self: center;
+
+}
+
+.h2-size {
+  font-size:150%;
+  font-weight: bold;
+}
+
+.half-vw {
+  width: 50vw;
+}
