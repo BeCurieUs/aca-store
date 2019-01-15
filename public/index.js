@@ -146,6 +146,7 @@ const checkout = () => {
   // shopping cart view mode so we don't have to reset a 4th item in the
   // other code
   document.getElementById("main-list").innerHTML = `
+    <h1 class"h2-size">Enter Order Details:</h2>
     <form class= "flex-down margin-small half-vw" onsubmit="event.preventDefault(); buyItems();">
       <input class="margin-small" id="checkout-firstname" type="text" placeholder="First Name">
       <input class="margin-small" id="checkout-lastname" type="text" placeholder="Last Name">
