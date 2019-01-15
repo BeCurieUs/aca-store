@@ -22,12 +22,19 @@ const checkActivity = () => {
   }
 }
 
+const stopThis = (e)=>{
+  if (!e) var e = window.event;
+  e.cancelBubble = true;
+  if (e.stopPropagation) e.stopPropagation();
+}
+
 const displayProduct = (itemID) => {
 
   const item = getItemById(itemID)
 
-
+  const category = document.getElementById("select-category").value;
   document.getElementById("main-list").innerHTML = `
+  <h1 onclick='displayDefault(""); populateCategories();' class='margin-small-top h3-size '>All Items ${!category || category=="--Choose--" ? "" : `<span class="normal" onclick="displayDefault('${category}'); stopThis();">  &#187; `+ category+ '</span>'}</h1>
   <div class="flex-right padding-small">
     <img class="fit-content" src=${item.imgUrl} alt=${item.description} />
     <div class="margin-small-left"> 
@@ -245,7 +252,7 @@ const searchItems = () => {
 
   // then apply the search filter and we will display the mapped results
   const tempDisplayArray = categoryProducts.filter( (item,index) => {
-    return item.name.toLocaleLowerCase().includes(formValue);
+    return item.name.toLowerCase().includes(formValue.toLowerCase());
   }).map((fliteredItem,filteredIndex) => {
     return imageCard(fliteredItem,true,"article")
   })
@@ -253,6 +260,7 @@ const searchItems = () => {
   
 
   document.getElementById("main-list").innerHTML = 
+  `<h1 onclick='displayDefault(""); populateCategories();' class='margin-small-top h3-size '>All Items <span onclick='displayDefault("${category}")' class='normal'>${!category || category=="--Choose--" ? "" : "&#187; "+category}</span></h1>`+
   "<div class='flex-right overflow'>"+
   tempDisplayArray.join("")+
   "</div>"
@@ -271,6 +279,8 @@ const resetEverything = () => {
 
 const displayDefault = (category) => {
   let categoryProducts = [];
+    
+
   if(category && category !== "--Choose--"){
     categoryProducts = products.reduce( (accumulator,item) => {
       if(item.category===category){
@@ -283,7 +293,9 @@ const displayDefault = (category) => {
     categoryProducts = products;
   }
 
-  document.getElementById("main-list").innerHTML = "<div id='product-row' class='flex-right overflow'>" +
+  document.getElementById("main-list").innerHTML = 
+  `<h1 onclick='displayDefault(""); populateCategories();' class='margin-small-top h3-size '>All Items <span class='normal'>${!category || category=="--Choose--" ? "" : "&#187; "+category}</span></h1>`+
+  "<div id='product-row' class='flex-right overflow'>" +
   categoryProducts.map((item,index)=>{
     return(imageCard(item,true,"article"))
   }).join('') +

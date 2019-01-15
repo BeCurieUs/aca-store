@@ -51,6 +51,16 @@
   font-weight: bold;
 }
 
+.h3-size {
+  font-size:125%;
+  font-weight: bold;
+}
+
+.normal {
+  font-size: 100%;
+  font-weight: 100;
+}
+
 .half-vw {
   width: 50vw;
 }
