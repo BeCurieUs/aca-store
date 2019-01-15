@@ -199,7 +199,7 @@ const imageCard = (item, descriptionSelector,tagType) => {
     return `
       <${tagType} class="padding-small" >
         <img src=${item.imgUrl} alt=${item.description} />
-        <div> 
+        <div class="description-container"> 
           <p>${item.name}</p>
           <p>Rating: ${item.rating}</p>
           <p>Reviews: ${item.reviews.length}</p>
@@ -210,9 +210,9 @@ const imageCard = (item, descriptionSelector,tagType) => {
   }
   //implicit else
   return `
-  <${tagType} class="padding-small" >
+  <${tagType} class="padding-small " >
     <img src=${item.imgUrl} alt=${item.description} />
-    <div> 
+    <div class="description-container"> 
       <p>${item.name}</p>
       <p>Rating: ${item.rating}</p>
       <p>Reviews: ${item.reviews.length}</p>
@@ -256,6 +256,11 @@ const searchItems = () => {
   "<div class='flex-right overflow'>"+
   tempDisplayArray.join("")+
   "</div>"
+  const imageTags = document.getElementsByTagName("img");
+  for(let i=0;i<imageTags.length;i++){
+    imageTags[i].nextElementSibling.style.width = imageTags[i].width.toString()+"px";
+  }
+  // set the width dynamically to the width of the picture of its sibling
 }
 
 const resetEverything = () => {
@@ -283,6 +288,16 @@ const displayDefault = (category) => {
     return(imageCard(item,true,"article"))
   }).join('') +
   "</div>"
+
+  const imageTags = document.getElementsByTagName("img");
+  for(let i=0;i<imageTags.length;i++){
+    if(imageTags[i].width){
+      imageTags[i].nextElementSibling.style.width = imageTags[i].width.toString()+"px"
+    }
+    // setting description width to that of the image sibling
+    // but this doesn't work for the first time the page loads and
+    //  onload function make this work right. This stop gap works
+  }
 }
 
 const populateCategories = () => {
@@ -325,7 +340,5 @@ if(sessionStorage.getItem("cart")){
 
 displayDefault();
 populateCategories();
-
-
 
 
